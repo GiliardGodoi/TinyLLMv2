@@ -43,7 +43,7 @@ class DatasetLoader:
         for split_name, split_id in self.split_map.items():
             file_path = f'{self.data_root}/{self.dataset_name}/{self.dataset_name}_{split_name}.json'
             datasets[split_id].to_json(file_path)
-        
+
     def load_from_json(self):
         """Loads the dataset from pre-exported JSON files."""
         data_files = {

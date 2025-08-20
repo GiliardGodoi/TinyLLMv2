@@ -4,32 +4,9 @@ import numpy as np
 import argparse
 from datasets import DatasetDict, concatenate_datasets
 from transformers import AutoTokenizer, T5ForConditionalGeneration, T5Tokenizer
-from data_utils import OBQADatasetLoader, ARCDatasetLoader, PIQADatasetLoader, RiddleDatasetLoader, PubMedQADatasetLoader, BioASQDatasetLoader
-from train_utils import train_and_evaluate
+from tiny.datasets import OBQADatasetLoader, ARCDatasetLoader, PIQADatasetLoader, RiddleDatasetLoader, PubMedQADatasetLoader, BioASQDatasetLoader
+from tiny.trainer import train_and_evaluate
 
-def compute_metrics_text(tokenizer):
-    """
-    Defines a function for computing custom evaluation metrics.
-
-    Args:
-        tokenizer: The tokenizer used for decoding model predictions.
-
-    Returns:
-        A function that computes metrics based on predictions and labels.
-    """
-    def compute_metrics(eval_pred):
-        predictions, labels = eval_pred
-        predictions[0] = np.where(predictions[0] != -100, predictions[0], tokenizer.pad_token_id)
-        tokenizer.batch_decode(predictions[0], skip_special_tokens=True)
-        labels = np.where(labels[0] != -100, labels[0], tokenizer.pad_token_id)
-        # Decode predictions and labels
-        decoded_preds = tokenizer.batch_decode(predictions[0], skip_special_tokens=True)
-        decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
-        # Compute accuracy
-        acc = np.mean(np.array(decoded_preds) == np.array(decoded_labels))
-        return {'accuracy': acc}
-
-    return compute_metrics
 
 def run(args):
     """
@@ -58,8 +35,8 @@ def run(args):
         dataset_loader = BioASQDatasetLoader()
         max_input_length = 500
     else:
-        raise ValueError
-    
+        raise ValueError()
+
     datasets = dataset_loader.load_from_json()
 
     # Load rationales from language models
@@ -102,7 +79,7 @@ def run(args):
                                  max_length=args.max_input_length,
                                  padding="max_length",
                                  truncation=True)
-        
+
         # Tokenize the t5 explanations
         t5_model_inputs = tokenizer(['explain: ' + text for text in examples['input']],
                                       max_length=args.max_input_length,
