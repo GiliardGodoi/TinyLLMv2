@@ -1,0 +1,18 @@
+
+obqa:
+  filepath: 'datasets/obqa'
+
+arc:
+  filepath: 'datasets/arc'
+
+piqa:
+  filepath: 'datasets/piqa'
+
+riddle:
+  filepath: 'datasets/riddle'
+
+pubmedqa:
+  filepath: 'datasets/pubmedqa'
+
+bioasq:
+  filepath: 'datasets/bioasq'
