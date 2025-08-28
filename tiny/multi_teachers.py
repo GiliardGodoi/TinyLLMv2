@@ -58,7 +58,7 @@ class MultiTeacherSeq2SeqTrainer(Seq2SeqTrainer):
         student_inputs = inputs[student_key]
         student_outputs = model(**student_inputs)
 
-        # logger.info(f"{student_outputs.loss} | {student_inputs['input_ids'].shape} | {student_inputs['attention_mask'].shape} | {student_inputs['labels'].shape}")
+        logger.info(f"{student_outputs.loss} | {student_inputs['input_ids'].shape} | {student_inputs['attention_mask'].shape} | {student_inputs['labels'].shape}")
 
         all_outputs[student_key] = student_outputs
         losses_values = [ student_outputs.loss * self.student_weight ]
@@ -72,7 +72,7 @@ class MultiTeacherSeq2SeqTrainer(Seq2SeqTrainer):
         losses = torch.stack(losses_values)
         final_loss = torch.sum(losses.to(torch.float32))
 
-        # logger.info(f"{final_loss=} | {len(all_outputs)}")
+        logger.info(f"{final_loss=} | {len(all_outputs)}")
 
         return (final_loss, all_outputs) if return_outputs else final_loss
 
@@ -119,6 +119,6 @@ class MultiTeacherSeq2SeqTrainer(Seq2SeqTrainer):
         final_logits = [pred[1] for pred in prediction_outputs.values()]
         final_labels = [pred[2] for pred in prediction_outputs.values()]
 
-        # logger.info(f"{final_loss=} | {len(final_logits)} | {len(final_labels)}")
+        logger.info(f"{final_loss=} | {len(final_logits)} | {len(final_labels)}")
 
         return final_loss, final_logits, final_labels
