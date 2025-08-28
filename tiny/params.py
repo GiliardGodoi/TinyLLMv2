@@ -145,8 +145,8 @@ class Params(BaseParams):
     dataset: str = None
     from_pretrained: str = None
     student_weight: float = None
-    teachers_weights: List[float] = None
-    teachers_keys: List[str] = None
+    teachers_weights: List[float] = field(default_factory=list)
+    teachers_keys: List[str] = field(default_factory=list)
     max_steps: int = None
     eval_steps: int = None
     optimizer_name: str = None
