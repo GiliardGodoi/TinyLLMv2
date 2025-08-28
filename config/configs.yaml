@@ -1,0 +1,50 @@
+teachers :
+  - llama
+  - t5
+
+root : 'datasets'
+
+defaults:
+  batch_size: 8
+  bf16: true
+  eval_steps: 250
+  from_pretrained: google/flan-t5-large
+  generation_max_length: 65
+  grad_steps: 8
+  local_rank: -1
+  logging_strategy: steps
+  lr: 5.0e-05
+  max_input_length: 100
+  max_steps: 10000
+  model_id: flan-t5-large
+  no_log: false
+  optimizer_name: AdamW
+  output_rationale: false
+  parallelize: false
+  run: 0
+  student_weight: 1.0
+  teachers_keys:
+    - t5
+    - llama
+  teachers_weights:
+    - 1.0
+    - 1.0
+
+datasets :
+  obqa:
+    filepath: 'datasets/obqa'
+
+  arc:
+    filepath: 'datasets/arc'
+
+  piqa:
+    filepath: 'datasets/piqa'
+
+  riddle:
+    filepath: 'datasets/riddle'
+
+  pubmedqa:
+    filepath: 'datasets/pubmedqa'
+
+  bioasq:
+    filepath: 'datasets/bioasq'
