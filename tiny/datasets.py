@@ -1,7 +1,7 @@
 import re
 import json
 from datasets import Dataset, DatasetDict, load_dataset
-from .tiny import CONFIGS
+from .tiny import CONFIGS # type: ignore
 
 # DATASET_ROOT = 'datasets'
 DATASET_ROOT = CONFIGS['root']

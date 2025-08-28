@@ -1,4 +1,5 @@
 import argparse
+import sys
 from pathlib import Path
 from tiny import CONFIGS
 from tiny.params import Params
@@ -26,7 +27,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="main.py",
         description='Run tinyLLM fine tuning'
-
     )
     parser.add_argument('-d', '--dataset', type=str, choices=datasets_options, required=True)
     # parser.add_argument('--gamma', type=float, default=1)
@@ -50,6 +50,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     params = default.update(**vars(args))
-    print(default._hash_id)
-    print(params._hash_id)
     run(params)
