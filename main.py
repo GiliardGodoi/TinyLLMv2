@@ -2,18 +2,23 @@ import argparse
 from pathlib import Path
 from tiny import CONFIGS
 from tiny.params import Params
+from tiny.utils import (
+    get_tokenizer_function,
+    train_and_evaluate
+
+)
 
 datasets_options = list(CONFIGS['datasets'].keys())
 default = Params(**CONFIGS['defaults'])
 
-def run(args):
+def run(params:Params):
     """
     """
-    datapath = CONFIGS['datasets'][args.dataset]['filepath']
+    datapath = CONFIGS['datasets'][params.dataset]['filepath']
     datapath = Path(datapath)
     assert datapath.exists()
-    params = Params(**vars(args))
-    params.to_yaml()
+    # params.to_yaml()
+
 
 
 
@@ -44,5 +49,7 @@ if __name__ == "__main__":
     parser.add_argument('--output_rationale', action='store_true' if default.output_rationale else 'store_false')
 
     args = parser.parse_args()
-
-    run(args)
+    params = default.update(**vars(args))
+    print(default._hash_id)
+    print(params._hash_id)
+    run(params)

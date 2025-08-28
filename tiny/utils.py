@@ -2,10 +2,13 @@
 import os
 import shutil
 import logging
+from tiny.multi_teachers import (
+    MultiTeacherDataCollatorForSeq2Seq,
+    MultiTeacherSeq2SeqTrainer
+)
 from transformers import Seq2SeqTrainingArguments
 from transformers import T5ForConditionalGeneration
 from transformers.trainer_utils import set_seed
-from tiny.multi_teachers import MultiTeacherDataCollator, MultiTeacherTrainer
 from itertools import product
 
 roles_keys = ['student', 'llama', 't5']
@@ -100,7 +103,7 @@ def train_and_evaluate(params, run, tokenizer, ds_tokenized, compute_metrics):
     )
 
     # Initialize the data collator for handling batching and tokenization
-    data_collator = MultiTeacherDataCollator(tokenizer=tokenizer, model=model)
+    data_collator = MultiTeacherDataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
 
     # Trainer setup with custom arguments for the training process
     trainer_kwargs = {
@@ -115,6 +118,6 @@ def train_and_evaluate(params, run, tokenizer, ds_tokenized, compute_metrics):
     }
 
     # Initialize and run the trainer
-    trainer = MultiTeacherTrainer(**trainer_kwargs)
+    trainer = MultiTeacherSeq2SeqTrainer(**trainer_kwargs)
 
     trainer.train()

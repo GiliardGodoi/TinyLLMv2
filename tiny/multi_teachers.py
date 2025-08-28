@@ -1,8 +1,10 @@
 import torch
+import logging
 from transformers import DataCollatorForSeq2Seq, Seq2SeqTrainer
 from typing import List
-from .tiny import CONFIGS
+from tiny import CONFIGS
 
+logger = logging.getLogger('transformers')
 teachers = CONFIGS['teachers']
 
 class MultiTeacherDataCollatorForSeq2Seq(DataCollatorForSeq2Seq):
