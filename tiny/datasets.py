@@ -1,16 +1,46 @@
-import argparse
 import re
 import json
-import numpy as np
 from datasets import Dataset, DatasetDict, load_dataset
+from .tiny import CONFIGS
 
-# Define the root directory where datasets are stored.
-DATASET_ROOT = 'datasets'
+# DATASET_ROOT = 'datasets'
+DATASET_ROOT = CONFIGS['root']
+
+
+def transform(item):
+
+    question = item['input']
+
+    student = {
+        'input' : f'Predict: {question}',
+        'label' : item['label']
+    }
+
+    llama = {
+        'input' : f'Rationale: {question}',
+        'label' : item['llama']
+    }
+
+    t5 = {
+        'input' : f'Explain: {question}',
+        'label' : item['t5']
+    }
+
+    return { 'student' : student, 'llama' : llama, 't5' : t5 }
 
 class DatasetLoader:
     """Base class for loading and processing specific datasets."""
 
-    def __init__(self, dataset_name, has_valid, split_map, batch_size, train_batch_idxs, test_batch_idxs, valid_batch_idxs=None):
+    def __init__(
+            self,
+            dataset_name,
+            has_valid,
+            split_map,
+            batch_size,
+            train_batch_idxs,
+            test_batch_idxs,
+            valid_batch_idxs=None
+        ):
         """
         Initializes the dataset loader.
 
@@ -74,6 +104,33 @@ class DatasetLoader:
                 labels.append(label)
                 llamarationales.append(llamarationale)
         return rationales, labels, llamarationales
+
+    def load_multiteacher_format(self, teachers = ['llama', 't5']):
+
+        ds = self.load_from_json()
+        train_teacher_rationales, _, train_second_teacher_rationales = self.load_llm_preds(split='train')
+        test_teacher_rationales, _, test_second_teacher_rationales = self.load_llm_preds(split='test')
+
+        ds['train'] = ds['train'].add_column('llama', train_teacher_rationales)
+        ds['train'] = ds['train'].add_column('t5', train_second_teacher_rationales)
+        ds['test'] = ds['test'].add_column('llama', test_teacher_rationales)
+        ds['test'] = ds['test'].add_column('t5', test_second_teacher_rationales)
+
+        if self.has_valid:
+            valid_teacher_rationales, _, valid_second_teacher_rationales = self.load_llm_preds(split='valid')
+            ds['valid'] = ds['valid'].add_column('llama', valid_teacher_rationales)
+            ds['valid'] = ds['valid'].add_column('t5', valid_second_teacher_rationales)
+        else:
+            train_valid_ds = ds['train'].train_test_split(test_size=0.1, seed=0)
+            ds = DatasetDict({
+                'train' : train_valid_ds['train'],
+                'valid' : train_valid_ds['test'],
+                'test' : ds['test']
+            })
+
+        ds = ds.map(transform, remove_columns=['input', 'label'])
+
+        return ds
 
 class OBQADatasetLoader(DatasetLoader):
     def __init__(self):
@@ -430,27 +487,3 @@ class BioASQDatasetLoader(DatasetLoader):
             llamarationale = ""
 
         return rationale, label, llamarationale
-
-# Main execution block for running as a script.
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', type=str, required=True)
-    args = parser.parse_args()
-
-    # Initialize the appropriate dataset loader based on the command line argument.
-    if args.dataset == 'obqa':
-        dataset_loader = OBQADatasetLoader()
-    if args.dataset == 'arc':
-        dataset_loader = ARCDatasetLoader()
-    if args.dataset == 'piqa':
-        dataset_loader = PIQADatasetLoader()
-    if args.dataset == 'riddle':
-        dataset_loader = RiddleDatasetLoader()
-    if args.dataset == 'pubmedqa':
-        dataset_loader = PubMedQADatasetLoader()
-    if args.dataset == 'bioasq':
-        dataset_loader = BioASQDatasetLoader()
-
-    # Load dataset from source and export to JSON.
-    datasets = dataset_loader.load_from_source()
-    dataset_loader.to_json(datasets)

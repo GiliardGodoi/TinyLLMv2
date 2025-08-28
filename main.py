@@ -1,46 +1,48 @@
 import argparse
-import yaml
 from pathlib import Path
+from tiny import CONFIGS
+from tiny.params import Params
 
-DEFAULT_ARGS = yaml.safe_load(Path('.', 'tiny', 'defaults.yaml').read_text())
-
-DATASET_CONFIG = yaml.safe_load(Path('.', 'tiny', 'datasets.yaml').read_text())
+datasets_options = list(CONFIGS['datasets'].keys())
+default = Params(**CONFIGS['defaults'])
 
 def run(args):
     """
     """
-    datapath = Path(args.datapath)
+    datapath = CONFIGS['datasets'][args.dataset]['filepath']
+    datapath = Path(datapath)
     assert datapath.exists()
-    print(datapath, datapath.exists())
+    params = Params(**vars(args))
+    params.to_yaml()
 
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', type=str, required=True)
-    parser.add_argument('--datapath', type=str)
-    parser.add_argument('--gamma', type=float, default=1)
-    parser.add_argument('--alpha', type=float, default=1)
-    parser.add_argument('--beta', type=float, default=1)
-    parser.add_argument('--max_steps', type=int, default=10000)
-    parser.add_argument('--eval_steps', type=int, default=250)
-    parser.add_argument('--batch_size', type=int, default=8)
-    parser.add_argument('--optimizer_name', type=str, default='AdamW')
-    parser.add_argument('--lr', type=float, default=5e-5)
-    parser.add_argument('--run', type=int, default=0)
-    parser.add_argument('--from_pretrained', type=str, default='google/flan-t5-large')
-    parser.add_argument('--max_input_length', type=int, default=100)
-    parser.add_argument('--grad_steps', type=int, default=8)
-    parser.add_argument('--local_rank', type=int, default=-1)
-    parser.add_argument('--gen_max_len', type=int, default=64)
-    parser.add_argument('--parallelize', action='store_true')
-    parser.add_argument('--bf16', action='store_true')
-    parser.add_argument('--no_log', action='store_true')
-    parser.add_argument('--output_rationale', action='store_true')
+    parser = argparse.ArgumentParser(
+        prog="main.py",
+        description='Run tinyLLM fine tuning'
+
+    )
+    parser.add_argument('-d', '--dataset', type=str, choices=datasets_options, required=True)
+    # parser.add_argument('--gamma', type=float, default=1)
+    # parser.add_argument('--alpha', type=float, default=1)
+    # parser.add_argument('--beta', type=float, default=1)
+    parser.add_argument('--max_steps', type=int, default=default.max_steps)
+    parser.add_argument('--eval_steps', type=int, default=default.eval_steps)
+    parser.add_argument('--batch_size', type=int, default=default.batch_size)
+    parser.add_argument('--optimizer_name', type=str, default=default.optimizer_name)
+    parser.add_argument('--lr', type=float, default=default.lr)
+    parser.add_argument('--run', type=int, default=default.run)
+    parser.add_argument('--from_pretrained', type=str, default=default.from_pretrained)
+    parser.add_argument('--max_input_length', type=int, default=default.max_input_length)
+    parser.add_argument('--grad_steps', type=int, default=default.grad_steps)
+    parser.add_argument('--local_rank', type=int, default=default.local_rank)
+    parser.add_argument('--generation_max_length', type=int, default=default.generation_max_length)
+    parser.add_argument('--parallelize', action='store_true' if default.parallelize else 'store_false')
+    parser.add_argument('--bf16', action='store_true' if default.bf16 else 'store_false')
+    parser.add_argument('--no_log', action='store_true' if default.no_log else 'store_false')
+    parser.add_argument('--output_rationale', action='store_true' if default.output_rationale else 'store_false')
 
     args = parser.parse_args()
-
-    if args.dataset in DATASET_CONFIG:
-        args.datapath = DATASET_CONFIG[args.dataset].get('filepath', None)
 
     run(args)

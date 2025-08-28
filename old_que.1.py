@@ -3,9 +3,10 @@ import torch
 import numpy as np
 import argparse
 from datasets import DatasetDict, concatenate_datasets
-from transformers import AutoTokenizer, T5ForConditionalGeneration, T5Tokenizer
+from transformers import AutoTokenizer
 from tiny.datasets import OBQADatasetLoader, ARCDatasetLoader, PIQADatasetLoader, RiddleDatasetLoader, PubMedQADatasetLoader, BioASQDatasetLoader
-from tiny.trainer import train_and_evaluate
+from tiny.metrics import compute_metrics_text
+from tiny.utils import train_and_evaluate
 
 
 def run(args):
