@@ -27,7 +27,7 @@ from itertools import product
 
 roles_keys = ['student', 'llama', 't5']
 
-def get_tokenizer_function(tokenizer, max_length):
+def get_tokenizer_function(tokenizer, max_length, roles_keys=roles_keys):
 
     def tokenizer_function(example, roles_keys=roles_keys):
 
@@ -147,14 +147,13 @@ def train_and_evaluate(params : Params, dataset: Dataset):
     )
 
     # Initialize the data collator for handling batching and tokenization
-    data_collator = MultiTeacherDataCollatorForSeq2Seq(
-                                                        tokenizer=tokenizer,
-                                                        model=model,
-                                                        teachers_keys=params.teachers_keys
-                                                    )
+    data_collator = MultiTeacherDataCollatorForSeq2Seq(tokenizer, teachers_keys=params.teachers_keys)
 
     # Trainer setup with custom arguments for the training process
     trainer_kwargs = {
+        'student_weight': params.student_weight,
+        'teachers_weights': params.teachers_weights,
+        'teachers_keys': params.teachers_keys,
         'output_rationale': params.output_rationale,
         'model': model,
         'args': training_args,
