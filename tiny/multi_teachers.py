@@ -94,9 +94,6 @@ class MultiTeacherSeq2SeqTrainer(Seq2SeqTrainer):
             loss = torch.zeros_like(loss)
         prediction_outputs[self.student_key] = (loss, logits, labels)
 
-        device = student_input['input_ids'].device
-        dtype = student_input['input_ids'].dtype
-
         if self.output_rationale:
             for teacher, weight in zip(self.teacher_keys, self.teachers_weights):
                 teacher_input = inputs[teacher]

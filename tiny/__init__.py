@@ -23,12 +23,11 @@ formatter = logging.Formatter(
 file_handler = logging.FileHandler("debug.log", mode='w')
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
-
-stream_handler = logging.StreamHandler(sys.stdout)
-stream_handler.setLevel(logging.INFO)
-
 logger.addHandler(file_handler)
-logger.addHandler(stream_handler)
+
+# stream_handler = logging.StreamHandler(sys.stdout)
+# stream_handler.setLevel(logging.INFO)
+# logger.addHandler(stream_handler)
 
 transformers.utils.logging.set_verbosity_info()
 datasets.utils.logging.set_verbosity_info()
