@@ -126,7 +126,7 @@ def train_and_evaluate(params : Params, dataset: Dataset):
     training_args = Seq2SeqTrainingArguments(
         params.base_folder,
         bf16=params.bf16,
-        evaluation_strategy='steps',
+        eval_strategy='steps',
         eval_steps=params.eval_steps,
         gradient_accumulation_steps=params.grad_steps,
         generation_max_length=params.generation_max_length,
