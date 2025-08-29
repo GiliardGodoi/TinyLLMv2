@@ -129,7 +129,7 @@ def train_and_evaluate(params : Params, dataset: Dataset):
         evaluation_strategy='steps',
         eval_steps=params.eval_steps,
         gradient_accumulation_steps=params.grad_steps,
-        generation_max_length=params.gen_max_len,
+        generation_max_length=params.generation_max_length,
         learning_rate=params.lr,
         local_rank=params.local_rank,
         logging_dir=logging_dir,
