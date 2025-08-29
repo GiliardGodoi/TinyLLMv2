@@ -110,6 +110,13 @@ def _get_git_username():
         label = result['stdout']
     return label
 
+def _get_git_user_email():
+    label = None
+    result = _run_shell(['git', 'config', '--get', 'user.email'])
+    if result['returncode'] == 0:
+        label = result['stdout']
+    return label
+
 def _get_git_version():
     label = None
     result = _run_shell(['git', '--version'])
@@ -148,6 +155,7 @@ def _get_git_current_status():
 def get_git_repository_info():
     info = {
         'username' : _get_git_username(),
+        'email' : _get_git_user_email(),
         'branch'   : _get_git_branch(),
         'url'  : _get_git_remote_origin(),
         'version'  : _get_git_version(),

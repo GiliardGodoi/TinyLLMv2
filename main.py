@@ -8,6 +8,7 @@ from tiny.utils import (
     train_and_evaluate
 
 )
+from tiny.envinfo import env_report
 
 datasets_options = list(CONFIGS['datasets'].keys())
 default = Params(**CONFIGS['defaults'])
@@ -20,7 +21,7 @@ def run(params:Params):
     assert datapath.exists()
     params.to_yaml()
 
-
+    env_report(params.base_folder.parent, with_torch_info=True)
 
 
 if __name__ == "__main__":
