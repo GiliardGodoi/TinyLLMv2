@@ -18,7 +18,7 @@ def run(params:Params):
     datapath = CONFIGS['datasets'][params.dataset]['filepath']
     datapath = Path(datapath)
     assert datapath.exists()
-    # params.to_yaml()
+    params.to_yaml()
 
 
 

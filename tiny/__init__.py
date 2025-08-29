@@ -7,7 +7,7 @@ from pathlib import Path
 
 # Define the root directory where datasets are stored.
 CONFIGS = yaml.safe_load(
-    (Path(__file__).resolve().parent.parent / 'config' / "configs.yaml").read_text()
+    (Path(__file__).resolve().parent / 'config' / "configs.yaml").read_text()
 )
 
 logger = logging.getLogger('transformers')
