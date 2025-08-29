@@ -9,7 +9,7 @@ def compute_metrics_text(tokenizer):
         predictions, labels = eval_pred
         predictions, labels = predictions[0], labels[0]
 
-        logger.info(f'compute_metrics: raw inputs {predictions.shape=}| {labels.shape=}')
+        # logger.info(f'compute_metrics: raw inputs {predictions.shape=}| {labels.shape=}')
 
         max_len = max(predictions.shape[-1], labels.shape[-1])
 
@@ -27,8 +27,15 @@ def compute_metrics_text(tokenizer):
 
         token_acc = (preds_padded == labels_padded).mean()
 
-        logger.info(f'compute_metrics: padded {preds_padded.shape=}| {labels_padded.shape=}')
+        if preds_padded.shape != labels_padded.shape:
+            logger.info(f'compute_metrics: padded {preds_padded.shape=}| {labels_padded.shape=}')
 
-        return {'token_accuracy': token_acc }
+        predictions = np.where(predictions != -100, predictions, tokenizer.pad_token_id)
+        labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+        decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
+        decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+        acc = np.mean(np.array(decoded_preds) == np.array(decoded_labels))
+
+        return {'token_accuracy': token_acc, 'accuracy' : acc }
 
     return compute_metrics
