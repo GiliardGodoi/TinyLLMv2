@@ -10,7 +10,7 @@ defaults:
   eval_steps: 250
   from_pretrained: google/flan-t5-large
   generation_max_length: 65
-  grad_steps: 8
+  grad_steps: 2 # gradient_accumulation_steps
   local_rank: -1
   logging_strategy: steps
   lr: 5.0e-05

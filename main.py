@@ -48,8 +48,7 @@ def run(params:Params):
         raise ValueError()
 
     ds = dataset_loader.load_multiteacher_format()
-    # results = train_and_evaluate(params, ds)
-
+    train_and_evaluate(params, ds)
     env_report(params.base_folder.parent, with_torch_info=True)
 
 
