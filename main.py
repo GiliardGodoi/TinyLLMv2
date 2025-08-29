@@ -1,12 +1,18 @@
 import argparse
-import sys
 from pathlib import Path
 from tiny import CONFIGS
+from tiny.datasets import (
+    ARCDatasetLoader,
+    BioASQDatasetLoader,
+    OBQADatasetLoader,
+    PIQADatasetLoader,
+    PubMedQADatasetLoader,
+    RiddleDatasetLoader,
+)
 from tiny.params import Params
 from tiny.utils import (
     get_tokenizer_function,
     train_and_evaluate
-
 )
 from tiny.envinfo import env_report
 
@@ -20,6 +26,30 @@ def run(params:Params):
     datapath = Path(datapath)
     assert datapath.exists()
     params.to_yaml()
+
+    if params.dataset == 'obqa':
+        dataset_loader = OBQADatasetLoader()
+        params.max_input_length = 100
+    elif params.dataset == 'arc':
+        dataset_loader = ARCDatasetLoader()
+        params.max_input_length = 200
+    elif params.dataset == 'piqa':
+        dataset_loader = PIQADatasetLoader()
+        params.max_input_length = 100
+    elif params.dataset == 'riddle':
+        dataset_loader = RiddleDatasetLoader()
+        params.max_input_length = 100
+    elif params.dataset == 'pubmedqa':
+        dataset_loader = PubMedQADatasetLoader()
+        params.max_input_length = 500
+    elif params.dataset == 'bioasq':
+        dataset_loader = BioASQDatasetLoader()
+        params.max_input_length = 500
+    else:
+        raise ValueError()
+
+    ds = dataset_loader.load_multiteacher_format()
+    results = train_and_evaluate(params, ds)
 
     env_report(params.base_folder.parent, with_torch_info=True)
 

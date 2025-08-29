@@ -171,5 +171,10 @@ class Params(BaseParams):
             idx = self.from_pretrained.find('/') + 1
             self.model_id = self.from_pretrained[idx:]
 
+        if self.no_log :
+            self.logging_strategy = 'no'
+        else:
+            self.logging_strategy = 'steps'
+
     def template_folder_name(self):
         return "outputs/{hash_id}"
