@@ -161,7 +161,7 @@ def train_and_evaluate(params : Params, dataset: Dataset):
         'train_dataset': ds_tokenized["train"],
         'eval_dataset': {'validation': ds_tokenized["test"], },
         'data_collator': data_collator,
-        'tokenizer': tokenizer,
+        'processing_class': tokenizer,
         'compute_metrics': compute_metrics,
     }
 

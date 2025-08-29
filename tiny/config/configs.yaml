@@ -5,15 +5,15 @@ teachers :
 root : 'datasets'
 
 defaults:
-  batch_size: 8
+  batch_size: 16
   bf16: true
   eval_steps: 250
   from_pretrained: google/flan-t5-large
   generation_max_length: 65
-  grad_steps: 2 # gradient_accumulation_steps
+  grad_steps: 4 # gradient_accumulation_steps
   local_rank: -1
   logging_strategy: steps
-  lr: 5.0e-05
+  lr: 5e-5
   max_input_length: 100
   max_steps: 10000
   model_id: flan-t5-large
