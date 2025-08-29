@@ -144,6 +144,7 @@ def train_and_evaluate(params : Params, dataset: Dataset):
         save_strategy='no',
         save_steps=params.eval_steps,
         seed=params.run,
+        report_to='none'
     )
 
     # Initialize the data collator for handling batching and tokenization
