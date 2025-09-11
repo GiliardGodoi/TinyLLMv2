@@ -148,6 +148,7 @@ class Params(BaseParams):
     teachers_weights: List[float] = field(default_factory=list)
     teachers_keys: List[str] = field(default_factory=list)
     max_steps: int = None
+    num_train_epochs: int = None
     eval_steps: int = None
     optimizer_name: str = None
     lr: float = None

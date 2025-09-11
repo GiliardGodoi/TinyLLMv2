@@ -136,6 +136,7 @@ def train_and_evaluate(params : Params, dataset: Dataset):
         logging_strategy = params.logging_strategy,
         logging_steps = params.eval_steps,
         max_steps = params.max_steps,
+        num_train_epochs=params.num_train_epochs,
         per_device_train_batch_size = params.batch_size,
         per_device_eval_batch_size = params.batch_size,
         predict_with_generate = True,
