@@ -15,8 +15,8 @@ defaults:
   logging_strategy: steps
   lr: 5e-5
   max_input_length: 100
-  max_steps: -1
-  num_train_epochs: 1
+  max_steps: 10000
+  num_train_epochs: None
   model_id: flan-t5-large
   no_log: false
   optimizer_name: AdamW
@@ -28,8 +28,8 @@ defaults:
     - t5
     - llama
   teachers_weights:
-    - 1.0
-    - 1.0
+    - 2.0
+    - 2.0
 
 datasets :
   obqa:
