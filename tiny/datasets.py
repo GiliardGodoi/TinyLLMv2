@@ -6,7 +6,6 @@ from tiny import CONFIGS # type: ignore
 # DATASET_ROOT = 'datasets'
 DATASET_ROOT = CONFIGS['root']
 
-
 def transform(item):
 
     question = item['input']

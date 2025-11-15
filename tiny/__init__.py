@@ -7,7 +7,7 @@ from pathlib import Path
 
 # Define the root directory where datasets are stored.
 CONFIGS = yaml.safe_load(
-    (Path(__file__).resolve().parent / 'config' / "configs.yaml").read_text()
+    (Path(__file__).resolve().parent / "configs.yaml").read_text()
 )
 
 logger = logging.getLogger('transformers')
@@ -25,9 +25,9 @@ file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
-# stream_handler = logging.StreamHandler(sys.stdout)
-# stream_handler.setLevel(logging.INFO)
-# logger.addHandler(stream_handler)
+stream_handler = logging.StreamHandler(sys.stdout)
+stream_handler.setLevel(logging.INFO)
+logger.addHandler(stream_handler)
 
 transformers.utils.logging.set_verbosity_info()
 datasets.utils.logging.set_verbosity_info()

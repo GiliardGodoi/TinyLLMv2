@@ -1,5 +1,6 @@
 import hashlib
 import json
+import yaml
 from collections.abc import Iterable
 from dataclasses import (
     asdict,
@@ -19,8 +20,8 @@ def choices(values):
 @dataclass
 class BaseParams:
 
-    _hash_id : str = field(init=False, default=None, repr=False)
-    _timestamp: str = field(default_factory=lambda: datetime.now().isoformat(), init=False, repr=False)
+    _hash_id : str = field(default=None, init=False, repr=False, hash=False)
+    _timestamp: str = field(default_factory=lambda: datetime.now().isoformat(), repr=False)
 
     def _check_attrs_names(self, **kwargs):
 
@@ -55,7 +56,6 @@ class BaseParams:
 
     @classmethod
     def from_yaml(cls, filepath:'str'):
-        import yaml
         with open(filepath, 'r') as f:
             config = yaml.safe_load(f)
         return cls.from_dict(config)
@@ -64,10 +64,9 @@ class BaseParams:
     # Conversão
     # -------------------------
     def to_dict(self):
-        return {k : v for k, v in (asdict(self)).items() if not k.startswith('_')}
+        return { f.name : getattr(self, f.name) for f in fields(self) if f.hash != False }
 
     def to_yaml(self):
-        import yaml
         filepath = self.get_default_folder() / 'parameters.yaml'
         with open(filepath, 'w') as f:
             txt = yaml.dump(asdict(self))
@@ -84,8 +83,7 @@ class BaseParams:
     # Hash dos argumentos
     # -------------------------
     def make_hash_id(self):
-        args_dict = asdict(self)
-        del args_dict['_hash_id']
+        args_dict = self.to_dict()
         args_txt = json.dumps(args_dict, sort_keys=True)
         digest = hashlib.md5(args_txt.encode()).hexdigest()
         return digest
@@ -114,7 +112,7 @@ class BaseParams:
             folder = self.get_base_folder_name_from_arguments()
         else:
             folder = self.get_base_folder_name_from_arguments() / key
-        if ensure_exists:
+        if not folder.exists() and ensure_exists:
             folder.mkdir(parents=True, exist_ok=True)
         return folder
 
@@ -140,8 +138,12 @@ class BaseParams:
     def dir_images(self, ensure_exists=True):
         return self.get_default_folder('images', ensure_exists)
 
+    def dir_results(self, ensure_exists=True):
+        return self.get_default_folder('results', ensure_exists)
+
 @dataclass
 class Params(BaseParams):
+    experiment : str = 'testing'
     dataset: str = None
     from_pretrained: str = None
     student_weight: float = None
@@ -164,6 +166,7 @@ class Params(BaseParams):
     no_log: bool = None
     output_rationale: bool = None
     logging_strategy: str = None
+    lora_rank:int = None
 
     def __post_init__(self):
         if self.from_pretrained is None:
@@ -178,4 +181,4 @@ class Params(BaseParams):
             self.logging_strategy = 'steps'
 
     def template_folder_name(self):
-        return "outputs/{hash_id}"
+        return "outputs/{experiment}/{hash_id}"
