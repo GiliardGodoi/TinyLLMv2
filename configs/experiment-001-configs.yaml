@@ -1,5 +1,5 @@
 parameters:
-  experiment : 'experiment.001'
+  experiment : '001.experiment'
   batch_size: 32
   bf16: true
   eval_steps: 250

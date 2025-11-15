@@ -1,27 +1,27 @@
-defaults:
-  experiment : 'experiment.001'
-  batch_size: 16
+parameters:
+  experiment : '002.experiment'
+  batch_size: 32
   bf16: true
-  eval_steps: 250
+  eval_steps: 500
   from_pretrained: google/flan-t5-large
-  generation_max_length: 65
-  grad_steps: 4 # gradient_accumulation_steps
+  generation_max_length: 150
+  grad_steps: 1 # gradient_accumulation_steps
   local_rank: -1
   logging_strategy: steps
   lr: 5e-5
-  max_input_length: 100
-  max_steps: 50
+  max_input_length: 250
+  max_steps: 7000
   num_train_epochs: 0.0
   model_id: flan-t5-large
   no_log: false
   optimizer_name: AdamW
   output_rationale: false
   parallelize: false
-  run: 2
+  run: 4224
   student_weight: 1.0
   teachers_keys:
     - t5
     - llama
   teachers_weights:
-    - 2.0
-    - 2.0
+    - 1.0
+    - 1.0
