@@ -10,7 +10,7 @@ from tiny.datasets import (
     RiddleDatasetLoader,
 )
 from tiny.params import Params
-from tiny.trainer import (
+from tiny.multi_teachers_trainer import (
     train_and_evaluate
 )
 from tiny.envinfo import env_report
