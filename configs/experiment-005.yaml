@@ -1,11 +1,11 @@
 parameters:
-  experiment : '005.experiment'
-  batch_size: 8
+  experiment : '005A01.experiment'
+  batch_size: 9
   bf16: true
   eval_steps: 500
   from_pretrained: google/flan-t5-large
   generation_max_length: 150
-  grad_steps: 1 # gradient_accumulation_steps
+  grad_steps: 0 # gradient_accumulation_steps
   local_rank: -1
   logging_strategy: steps
   lr: 5e-4
