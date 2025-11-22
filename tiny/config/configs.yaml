@@ -5,17 +5,17 @@ teachers :
 root : 'datasets'
 
 defaults:
-  batch_size: 16
+  batch_size: 8
   bf16: true
   eval_steps: 250
   from_pretrained: google/flan-t5-large
   generation_max_length: 65
-  grad_steps: 4 # gradient_accumulation_steps
+  grad_steps: 8 # gradient_accumulation_steps
   local_rank: -1
   logging_strategy: steps
   lr: 5e-5
-  max_input_length: 100
-  max_steps: 10000
+  max_input_length: 150
+  max_steps: 7000
   model_id: flan-t5-large
   no_log: false
   optimizer_name: AdamW
@@ -27,8 +27,8 @@ defaults:
     - t5
     - llama
   teachers_weights:
-    - 0.5
-    - 0.5
+    - 1.0
+    - 1.0
 
 datasets :
   obqa:

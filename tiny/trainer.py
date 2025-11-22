@@ -96,7 +96,7 @@ def train_and_evaluate(params : Params, dataset: Dataset):
     lora_config = LoraConfig(
         r=16,
         lora_alpha=32,
-        target_modules=["q", "v"],
+        target_modules=["q", "v", "wi_0", "wi_1", "wo"],
         lora_dropout=0.05,
         bias="none",
         task_type="SEQ_2_SEQ_LM"
@@ -144,7 +144,7 @@ def train_and_evaluate(params : Params, dataset: Dataset):
         save_strategy = 'no',
         save_steps = params.eval_steps,
         seed = params.run,
-        report_to='none'
+        report_to='tensorboard'
     )
 
     # Initialize the data collator for handling batching and tokenization

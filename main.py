@@ -1,5 +1,6 @@
 import argparse
 from pathlib import Path
+from pprint import pprint
 from tiny import CONFIGS
 from tiny.datasets import (
     ARCDatasetLoader,
@@ -58,6 +59,7 @@ if __name__ == "__main__":
         description='Run tinyLLM fine tuning'
     )
     parser.add_argument('-d', '--dataset', type=str, choices=datasets_options, required=True)
+    parser.add_argument('-t', '--teachers_weights',type=float, nargs=2, default=default.teachers_weights)
     # parser.add_argument('--gamma', type=float, default=1)
     # parser.add_argument('--alpha', type=float, default=1)
     # parser.add_argument('--beta', type=float, default=1)
@@ -79,4 +81,5 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     params = default.update(**vars(args))
+    pprint(params)
     run(params)
