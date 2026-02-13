@@ -1,5 +1,6 @@
+
 for ds in obqa arc piqa riddle bioasq pubmedqa; do
-        python main.py -d $ds --lr 5e-3 --run 88
+        python main.py -d $ds --lr 5e-4 --run 9090
     done
 done
 

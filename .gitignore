@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 
 outputs/
+outputs_*/*
 nohup.out

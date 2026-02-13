@@ -96,7 +96,7 @@ def train_and_evaluate(params : Params, dataset: Dataset):
     lora_config = LoraConfig(
         r=16,
         lora_alpha=32,
-        target_modules=["q", "v", "wi_0", "wi_1", "wo"],
+        target_modules=["q", "v"],
         lora_dropout=0.05,
         bias="none",
         task_type="SEQ_2_SEQ_LM"
